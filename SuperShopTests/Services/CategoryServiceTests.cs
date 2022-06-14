@@ -32,13 +32,35 @@ public class CategoryServiceTests
     [TestMethod]
     public void When_Getting_Trends_Is_Runned_It_Should_Return_An_Int()
     {
+        //Arrange
+        var categoryList = new List<Category>
+        {
+            new Category
+            {
+                Name = "Van",
+                Icon = "test"
+            },
+            new Category
+            {
+                Name = "Coupe",
+                Icon = "test"
+            },
+            new Category
+            {
+                Name = "Hybrid",
+                Icon = "test"
+            }
+        };
 
-        var result = _categoryService.GetTrendingCategories(3).ToList();
+        _context.AddRange(categoryList);
+        _context.SaveChanges();
 
-        result.Add(new Category());
-        result.Add(new Category());
-        result.Add(new Category());
+        //Act
+        var result = _categoryService.GetTrendingCategories(3);
 
-        Assert.AreEqual(3, result.Count);
+        //Assert
+        Assert.AreEqual(3, result.Count());
+        
+        
     }
 }

@@ -22,15 +22,18 @@ public class PricingService : IPricingService
             {
                 foreach (var agreement in customerContext.Agreements)
                 {
-                    foreach (var agreementRow in agreement.AgreementRows)
+                    if (agreement.ValidTo < DateTime.Now)
                     {
-                        if (AgreementMatches(agreementRow, product))
+                        foreach (var agreementRow in agreement.AgreementRows)
                         {
-                            var price = (1.0m - (agreementRow.PercentageDiscount / 100.0m)) * product.BasePrice;
-                            if (price < lowest)
-                                lowest = Convert.ToInt32(Math.Round(price, 0));
-                        }
+                            if (AgreementMatches(agreementRow, product))
+                            {
+                                var price = (1.0m - (agreementRow.PercentageDiscount / 100.0m)) * product.BasePrice;
+                                if (price < lowest)
+                                    lowest = Convert.ToInt32(Math.Round(price, 0));
+                            }
 
+                        }
                     }
                 }
             }
@@ -46,9 +49,9 @@ public class PricingService : IPricingService
         var manufacturerCheck = !string.IsNullOrEmpty(agreementRow.ManufacturerMatch);
         if (productCheck && !product.Name.ToLower().Contains(agreementRow.ProductMatch.ToLower()))
             return false;
-        if (categoryCheck && !product.Name.ToLower().Contains(agreementRow.CategoryMatch.ToLower()))
+        if (categoryCheck && !product.CategoryName.ToLower().Contains(agreementRow.CategoryMatch.ToLower()))
             return false;
-        if (manufacturerCheck && !product.Name.ToLower().Contains(agreementRow.ManufacturerMatch.ToLower()))
+        if (manufacturerCheck && !product.ManufacturerName.ToLower().Contains(agreementRow.ManufacturerMatch.ToLower()))
             return false;
 
         return true;

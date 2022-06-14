@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MvcSuperShop.Data;
@@ -49,7 +50,13 @@ public class PricingServiceTests
         //Arrange
         var productList = new List<ProductServiceModel>
         {
-            new ProductServiceModel{BasePrice = 180000}
+            new ProductServiceModel
+            {
+                BasePrice = 180000, 
+                Name = "XC60", 
+                ManufacturerName = "Volvo", 
+                CategoryName = "SUV"
+            }
         };
 
         var customerContext = new CurrentCustomerContext
@@ -58,11 +65,15 @@ public class PricingServiceTests
             {
                 new Agreement()
                 {
+                    ValidFrom = new DateTime(2019,09,25),
+                    ValidTo = new DateTime(2021,09,02),
+
                     AgreementRows = new List<AgreementRow>
                     {
                         new AgreementRow()
                         {
-                            PercentageDiscount = 6
+                            PercentageDiscount = 6,
+                            ManufacturerMatch = "volvo"
                         }
                     }
                 }
@@ -79,18 +90,12 @@ public class PricingServiceTests
     }
 
     [TestMethod]
-    public void If_Customer_Has_Two_Or_More_Agreements_Should_Return_Best_Discount()
-    {
-
-    }
-
-    [TestMethod]
-    public void When_Customer_Is_Not_Found_Should_Return_No_Agreement()
+    public void When_Valid_To_Is_Lower_Than_DateTime_Now_Should_Return_Product_BasePrice()
     {
         //Arrange
         var productList = new List<ProductServiceModel>
         {
-            new ProductServiceModel{BasePrice = 180000}
+            new ProductServiceModel{BasePrice = 180000, Name = "XC60", ManufacturerName = "Volvo", CategoryName = "SUV"}
         };
 
         var customerContext = new CurrentCustomerContext
@@ -99,15 +104,15 @@ public class PricingServiceTests
             {
                 new Agreement()
                 {
+                    ValidFrom = new DateTime(2019,09,25),
+                    ValidTo = new DateTime(2025,09,02),
+
                     AgreementRows = new List<AgreementRow>
                     {
                         new AgreementRow()
                         {
-                            PercentageDiscount = 8
-                        },
-                        new AgreementRow()
-                        {
-                            PercentageDiscount = 12
+                            PercentageDiscount = 6,
+                            ManufacturerMatch = "volvo"
                         }
                     }
                 }
@@ -119,7 +124,119 @@ public class PricingServiceTests
         var result = _sut.CalculatePrices(productList, customerContext);
 
         //Assert
-        Assert.AreEqual(158400, result.First().Price);
+        Assert.AreEqual(180000, result.First().Price);
+    }
+
+    [TestMethod]
+    public void When_Two_Agreements_Is_Found_Use_Selected_Agreement()
+    {
+        //Arrange
+        var productList = new List<ProductServiceModel>
+        {
+            new ProductServiceModel{
+                BasePrice = 180000,
+                Name = "XC90 XL",
+                CategoryName = "Diesel",
+                ManufacturerName = "Volvo"
+
+            }
+        };
+
+        var customerContext = new CurrentCustomerContext
+        {
+            Agreements = new List<Agreement>
+            {
+                new Agreement()
+                {
+                    ValidFrom = new DateTime(2019,09,25),
+                    ValidTo = new DateTime(2024,09,02),
+
+                    AgreementRows = new List<AgreementRow>
+                    {
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 8,
+                            CategoryMatch = "van"
+                        },
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 5,
+                            CategoryMatch = "hybrid"
+                        }
+                    }
+                },
+                new Agreement()
+                {
+                    ValidFrom = new DateTime(2019,09,25),
+                    ValidTo = new DateTime(2024,09,02),
+                    AgreementRows = new List<AgreementRow>
+                    {
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 25,
+                            ManufacturerMatch = "volvo"
+                        }
+                    }
+                }
+
+            }
+        };
+
+
+        //Act
+        var result = _sut.CalculatePrices(productList, customerContext);
+
+        //Assert
+        Assert.AreEqual(169200, result.First().Price);
+    }
+
+    [TestMethod]
+    public void When_Two_Agreementrows_Are_Found_Should_Return_Discounted_Price_For_Selected_Category()
+    {
+        //Arrange
+        var productList = new List<ProductServiceModel>
+        {
+            new ProductServiceModel{
+                BasePrice = 180000,
+                Name = "Mini XL",
+                ManufacturerName = "AMC",
+                CategoryName = "van"
+
+            }
+        };
+
+        var customerContext = new CurrentCustomerContext
+        {
+            Agreements = new List<Agreement>
+            {
+                new Agreement()
+                {
+                    ValidFrom = new DateTime(2019,09,25),
+                    ValidTo = new DateTime(2020,09,02),
+                    AgreementRows = new List<AgreementRow>
+                    {
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 8,
+                            CategoryMatch = "van",
+                            ManufacturerMatch = "AMC"
+                        },
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 5,
+                            CategoryMatch = "hybrid"
+                        }
+                    }
+                }
+            }
+        };
+
+
+        //Act
+        var result = _sut.CalculatePrices(productList, customerContext);
+
+        //Assert
+        Assert.AreEqual(165600, result.First().Price);
 
     }
 
