@@ -66,7 +66,7 @@ public class PricingServiceTests
                 new Agreement()
                 {
                     ValidFrom = new DateTime(2019,09,25),
-                    ValidTo = new DateTime(2021,09,02),
+                    ValidTo = new DateTime(2024,09,02),
 
                     AgreementRows = new List<AgreementRow>
                     {
@@ -105,7 +105,7 @@ public class PricingServiceTests
                 new Agreement()
                 {
                     ValidFrom = new DateTime(2019,09,25),
-                    ValidTo = new DateTime(2025,09,02),
+                    ValidTo = new DateTime(2021,09,02),
 
                     AgreementRows = new List<AgreementRow>
                     {
@@ -134,10 +134,9 @@ public class PricingServiceTests
         var productList = new List<ProductServiceModel>
         {
             new ProductServiceModel{
-                BasePrice = 180000,
-                Name = "XC90 XL",
-                CategoryName = "Diesel",
-                ManufacturerName = "Volvo"
+                BasePrice = 130000,
+                CategoryName = "Volvo",
+                Name = "hybrid"
 
             }
         };
@@ -148,7 +147,6 @@ public class PricingServiceTests
             {
                 new Agreement()
                 {
-                    ValidFrom = new DateTime(2019,09,25),
                     ValidTo = new DateTime(2024,09,02),
 
                     AgreementRows = new List<AgreementRow>
@@ -161,20 +159,24 @@ public class PricingServiceTests
                         new AgreementRow()
                         {
                             PercentageDiscount = 5,
-                            CategoryMatch = "hybrid"
+                            ProductMatch = "hybrid"
                         }
                     }
                 },
                 new Agreement()
                 {
-                    ValidFrom = new DateTime(2019,09,25),
                     ValidTo = new DateTime(2024,09,02),
                     AgreementRows = new List<AgreementRow>
                     {
                         new AgreementRow()
                         {
-                            PercentageDiscount = 25,
-                            ManufacturerMatch = "volvo"
+                            PercentageDiscount = 7,
+                            CategoryMatch = "volvo"
+                        },
+                        new AgreementRow()
+                        {
+                            PercentageDiscount = 3,
+                            ProductMatch = "hybrid"
                         }
                     }
                 }
@@ -187,7 +189,7 @@ public class PricingServiceTests
         var result = _sut.CalculatePrices(productList, customerContext);
 
         //Assert
-        Assert.AreEqual(169200, result.First().Price);
+        Assert.AreEqual(120900, result.First().Price);
     }
 
     [TestMethod]
@@ -212,14 +214,14 @@ public class PricingServiceTests
                 new Agreement()
                 {
                     ValidFrom = new DateTime(2019,09,25),
-                    ValidTo = new DateTime(2020,09,02),
+                    ValidTo = new DateTime(2024,09,02),
                     AgreementRows = new List<AgreementRow>
                     {
                         new AgreementRow()
                         {
                             PercentageDiscount = 8,
                             CategoryMatch = "van",
-                            ManufacturerMatch = "AMC"
+                            ManufacturerMatch = "amc"
                         },
                         new AgreementRow()
                         {

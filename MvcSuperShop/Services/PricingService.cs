@@ -22,7 +22,7 @@ public class PricingService : IPricingService
             {
                 foreach (var agreement in customerContext.Agreements)
                 {
-                    if (agreement.ValidTo < DateTime.Now)
+                    if (agreement.ValidTo > DateTime.Now)
                     {
                         foreach (var agreementRow in agreement.AgreementRows)
                         {

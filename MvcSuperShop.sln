@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcSuperShop", "MvcSuperShop\MvcSuperShop.csproj", "{DE596C34-1B27-4A15-9858-A2A419333B98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperShopTests", "SuperShopTests\SuperShopTests.csproj", "{421A2E3E-565C-4269-B51B-529064C8F0A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperShopTests", "SuperShopTests\SuperShopTests.csproj", "{421A2E3E-565C-4269-B51B-529064C8F0A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KyhTestingProject.UiTests", "KyhTestingProject.UiTests\KyhTestingProject.UiTests.csproj", "{9EBD2D18-5294-4BED-97FB-454746521EEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{421A2E3E-565C-4269-B51B-529064C8F0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{421A2E3E-565C-4269-B51B-529064C8F0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{421A2E3E-565C-4269-B51B-529064C8F0A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EBD2D18-5294-4BED-97FB-454746521EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EBD2D18-5294-4BED-97FB-454746521EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EBD2D18-5294-4BED-97FB-454746521EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EBD2D18-5294-4BED-97FB-454746521EEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
